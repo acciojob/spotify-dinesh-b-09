@@ -52,47 +52,44 @@ public class SpotifyRepository {
     }
 
     public Album createAlbum(String title, String artistName) {
-        Album album = new Album(title);
+        Artist artist=null;
+        for(Artist artist1:artists){
+            if(artist1.getName().equals(artistName)){
+                artist=artist1;
+                break;
+            }
+        }
+        if(artist == null)
+            artist=createArtist(artistName);
+
+        Album album=new Album(title);
         albums.add(album);
-        albumSongMap.put(album, new ArrayList<>());
 
-        Artist artist = new Artist(artistName);
-//      artistAlbumMap.put(artist, artistAlbumMap.getOrDefault(artist.get().add(album), new ArrayList<>());
+        artistAlbumMap.get(artist).add(album);
+        albumSongMap.put(album,new ArrayList<>());
 
-        if(artistAlbumMap.containsKey(artist))
-        {
-            List<Album> list = artistAlbumMap.get(artist);
-            list.add(album);
-            artistAlbumMap.put(artist, list);
-        }
-        else
-        {
-            artists.add(artist);
-          //  artistAlbumMap.put(artist, new ArrayList<>());
-            List<Album> list = artistAlbumMap.get(artist);
-            list.add(album);
-            artistAlbumMap.put(artist, list);
-        }
         return album;
     }
 
     public Song createSong(String title, String albumName, int length) throws Exception{
-        Song song = new Song(title, length);
+        Album album=null;
+        for(Album album1:albums){
+            if(album1.getTitle().equals(albumName)){
+                album=album1;
+                break;
+            }
+        }
+        if(album == null){
+            throw new Exception("Album does not exist");
+        }
+        Song song=new Song(title,length);
+        song.setLikes(0);
         songs.add(song);
-        songLikeMap.put(song, new ArrayList<>());
 
-        Album album = new Album(albumName);
+        albumSongMap.get(album).add(song);
 
-        if(albumSongMap.containsKey(album))
-        {
-            List<Song> li = albumSongMap.get(album);
-            li.add(song);
-            albumSongMap.put(album, li);
-        }
-        else
-        {
-           throw new Exception("Album does not exist");
-        }
+        songLikeMap.put(song,new ArrayList<>());
+
         return song;
     }
 
